@@ -1,0 +1,113 @@
+import java_cup.runtime.*;
+import java.util.*;
+import proyecto2compi.*;
+action code
+    {:
+        Hashtable table = new Hashtable();
+        Object temporal = null; // variable que guarda un dato temporal.
+        int contTemp = 0;       // lleva la cuenta de los temporales que se ha definido para el codigo intermedio 
+        int contEtiq = 0;       // contador para las etiquetas del codigo intermedio generado 
+        int contOperando = 0;   //variable que va contando los operandos de una expresion aritmetica.
+        int contOperadores = 0; //contador para los operadores de una expresion artimetica 
+        int contParametros = 0; //contador para la cantida de parametros de un metodo 
+        /*METODO QUE VALIDA QUE EL IDENTIFICADOR HAYA SIDO DECLARADO ANTERIORMENTE*/
+        public void validaIdentificador(Object iden, int idenleft, int idenright){
+            Object value= table.get(iden); //extrae el valor del identificador guardado en el hashtable
+            if(value == null){             //valida si existe el valor 
+                parser.report_error(" Error Semantico: Metodo <"+ iden+ "> no declarado" , new Symbol(sym.IDENTIFICADOR,idenleft, idenright,iden));//msj de error semantico, no existe la delcaracion de la variable
+                value = new Integer(0);//asigna valor 0
+            }
+        }
+
+        /*METODO QUE VALIDA QUE UN METODO HAYA SIDO DECLARADO ANTERIORMENTE*/
+        public void validaIdenMetodo(Object iden, int idenleft, int idenright){
+            if(proyecto1_compi.Analisis.table.containsKey(iden) == false){//valida si existe el valor 
+                parser.report_error(" Error Semantico: Identificador <"+ iden+ "> no declarado" , new Symbol(sym.IDENTIFICADOR,idenleft, idenright,iden));//msj de error semantico, no existe la delcaracion de la variable
+            }
+        }
+
+    :};
+
+parser code{: 
+    /* Reporte de error encontrado. */
+
+    public void report_error(String message, Object info) {
+        StringBuilder m = new StringBuilder("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));
+                if (s.right >= 0)
+                    m.append(", column "+(s.right+1));
+            }
+        }
+        m.append(" : "+message);
+        System.err.println(m);
+        proyecto1_compi.Analisis.pw.println(m.toString());
+        proyecto1_compi.Analisis.indicador=false;
+    }
+   
+                /* Cuando se encuentra un error de donde el sistema no puede
+                        recuperarse*/
+
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        //System.exit(1);
+    }
+
+
+                /* Metodo main para garantizar la ejecucion del analizador
+         lexico y sintactico, ademas que se pase como parametro la tabla
+                  de simbolos correspondiente. */
+
+/*
+    public static void main(String args){
+        try {
+            Parser ps = new Parser(
+                    new Lexer(new FileReader(args)));
+            Object result = ps.parse().value;
+            System.out.println("\n** Resultados finales **");
+        } catch (Exception ex) {
+            System.out.println("ERROR");
+            ex.printStackTrace();
+        }
+    }*/
+
+    :} 
+
+
+/*terminales*/
+terminal IDENTIFICADOR;
+terminal ParDer,ParIzq;
+terminal LlaveIzq, LlaveDer;
+terminal Igual, And, Or, Not;
+terminal Void,Main;
+terminal Booleano, Int,Double,Char,String, Cadena, Nulo;
+terminal Digito,Digito2;
+terminal True, False;
+terminal Punto, Coma,Comilla;
+terminal Menor, Mayor, MayorIg, MenorIg, Compara, Diferente;
+terminal IF, ELSE;
+terminal WHILE, FOR, DO, BREAK, RETURN;
+terminal PRINT;
+terminal Aumento, Decremento;
+terminal DISMINUCIONASIGNACION, MULTIASIGNACION, DIVASIGNACION;
+terminal SQRT;
+terminal PuntoYComa,DosPuntos;
+terminal SUMA, RESTA, DIV, MULT, MODULO;
+
+/*No terminales*/
+non terminal Programa, MAIN, Letras, Blocke;
+non terminal Variables, Tipo;
+non terminal Dato, Booleano, Flotante, String;
+non terminal Operadores_relacionales, Operadores_logicos;
+non terminal Estructuras_control, Expresion_logica, Expresion_logica_list,Expr_log;
+non terminal Sentencia_if, Ciclo_while, Ciclo_for, Ciclo_doWhile;
+non terminal Return, Definicion_variables_list;
+non terminal Opciones_SalidaEstandar, Entrada, Salida;
+non terminal Definicion_metodo, Llamada_Metodo, Parametros;
+non terminal Unarios, Operaciones_aritmeticas, Operadores_aritmeticos;
+non terminal Estructuras_control_list,Opciones_SalidaEstandar_list;
+non terminal Definicion_metodo_list, Bloque_list, Parametros_LlamadaMetodo;
+non terminal Bloque_codigo, Stat, Operandos;
