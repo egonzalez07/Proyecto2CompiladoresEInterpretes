@@ -110,4 +110,4 @@ non terminal Definicion_metodo, Llamada_Metodo, Parametros;
 non terminal Unarios, Operaciones_aritmeticas, Operadores_aritmeticos;
 non terminal Estructuras_control_list,Opciones_SalidaEstandar_list;
 non terminal Definicion_metodo_list, Bloque_list, Parametros_LlamadaMetodo;
-non terminal Bloque_codigo, Stat, Operandos; 
+non terminal Bloque_codigo, Stat, Operandos; /*elka*/ 
